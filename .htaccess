@@ -1,0 +1,46 @@
+## Define PHP version 7.4 for this project on your project (server: hostinger)
+## Check with your server provider for the method to declare the PHP version used
+#<FilesMatch "\.(php4|php5|php3|php2|php|phtml)$">
+#    SetHandler application/x-lsphp74
+#</FilesMatch>
+#
+#<Files "*">
+#    Order Deny,Allow
+#    Deny from all
+#</Files>
+#
+#<FilesMatch "\.(eot|otf|ttf|woff|woff2|svg)$">
+#    Order Allow,Deny
+#    Allow from all
+#</FilesMatch>
+
+#<FilesMatch "\.(html|css|js|jpg|jpeg|png|gif|svg|webp|ico|bmp|tiff)$">
+#    Order Allow,Deny
+#    Allow from all
+#</FilesMatch>
+#
+#<Files "index.php">
+#    Order Allow,Deny
+#    Allow from all
+#</Files>
+
+Options -Indexes
+RewriteEngine On
+
+## Used in production
+#RewriteBase /
+
+# Used in development
+RewriteBase /cadastro-clientes/
+
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+RewriteRule ^template/ - [L]
+
+RewriteRule ^assets/(.*)$ template/assets/$1 [L]
+
+RewriteRule ^(.*)$ index.php [QSA,L]
