@@ -3,6 +3,7 @@
 use System\Core\Helpers;
 use System\Controller\LoginController;
 use System\Controller\HomeController;
+use System\Controller\ProductController;
 
 function defineRoutes($uri, $requestMethod)
 {
@@ -17,6 +18,7 @@ function defineRoutes($uri, $requestMethod)
         ['uri' => $baseSiteUri, 'method' => 'POST', 'action' => [LoginController::class, 'store']],
         ['uri' => "{$baseSiteUri}logout", 'method' => 'GET', 'action' => [LoginController::class, 'logout']],
         ['uri' => "{$baseSiteUri}home", 'method' => 'GET', 'action' => [HomeController::class, 'index']],
+        ['uri' => "{$baseSiteUri}products", 'method' => 'GET', 'action' => [ProductController::class, 'index']],
     ];
 
     foreach ($routes as $route) {

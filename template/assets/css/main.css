@@ -1,13 +1,30 @@
-html {
+/*html {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*}*/
+
+/*body {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    color: white;*/
+/*}*/
+
+html, body {
+    height: 100%;
     margin: 0;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #151515;
-    color: white;
+main {
+    flex: 1;
+}
+
+footer.container {
+    background: rgb(6, 129, 190);
+    color: #ffffff;
+    width: 100%;
+    max-width: 100%;
 }
 
 @keyframes fadeIn {
@@ -20,7 +37,27 @@ body {
 }
 
 .fade-in {
-    animation: fadeIn 0.8s ease-in-out;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+main {
+    padding-top: 90px;
+}
+
+@media only screen and (max-width: 600px) {
+    main {
+        padding-top: 160px;
+    }
+}
+
+.custom-gradient-bg {
+    background: linear-gradient(#202a44, #0a2a56);
+    height: 100vh;
+}
+
+.custom-light-bg{
+    background: #ced9e5;
+    color:#0a2a56;
 }
 
 .custom-card-style{

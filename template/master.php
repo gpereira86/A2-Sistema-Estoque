@@ -9,12 +9,16 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"/>
   <link rel="stylesheet" href="http://use.fontawesome.com/releases/v6.2.0/css/all.css"/>
   <Link rel="stylesheet" href="./assets/css/main.css">
+  <Link rel="stylesheet" href="./assets/css/header.css">
 </head>
-<body>
+<body class="fade-in <?php echo $contentFile == 'login' ? 'custom-gradient-bg' : 'custom-light-bg'; ?>" >
+<main class="container ">
 
 <?php $contentFile != 'login' ? include_once 'partials/header.php' : null; ?>
 
 <?php echo $content; ?>
+
+</main>
 
 <?php $contentFile != 'login' ? include_once 'partials/footer.php' : null; ?>
 

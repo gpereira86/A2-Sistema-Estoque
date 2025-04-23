@@ -3,6 +3,7 @@
 namespace System\Controller;
 
 
+use System\Core\AuthMiddleware;
 use System\Core\Render;
 use System\Model\UsersModel;
 use System\Core\Helpers;
@@ -11,17 +12,15 @@ class LoginController
 {
     public function login()
     {
-        session_start();
-        if (isset($_SESSION['auth']['id'])) {
-            return Helpers::redirectToUrl('home');
-        }
+        if (AuthMiddleware::checkLogin()){
+            Helpers::redirectToUrl('home');
+        };
+
         return Render::renderHTML('login', ['title' => 'Login']);
     }
 
     public function store()
     {
-        session_start();
-
         $login = array_filter($_POST);
 
         if (empty($login)) {
@@ -71,21 +70,18 @@ class LoginController
             ]);
         }
 
-        $_SESSION['auth'] = [
-            'id'    => $user->id,
-            'name'  => $user->name,
-            'email' => $user->email
-        ];
+        if (AuthMiddleware::create($user)){
 
+            return Helpers::redirectToUrl('home');
+        };
 
-        return Helpers::redirectToUrl('home');
+        return Helpers::redirectToUrl('login');
+
     }
 
     public function logout()
     {
-        session_start();
-        session_unset();
-        session_destroy();
+        AuthMiddleware::destroy();
         sleep(1);
         return Helpers::redirectToUrl();
     }

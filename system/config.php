@@ -7,6 +7,7 @@
 date_default_timezone_set('America/Sao_Paulo');
 
 define('SITENAME','A2 - Glauco Pereira');
+define('SITEFUNCTIONNAME','Estoque');
 
 /**
  * Base URLs for the production and development environments.

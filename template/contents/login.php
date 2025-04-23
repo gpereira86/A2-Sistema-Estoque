@@ -2,9 +2,15 @@
     <div class="position-absolute top-50 start-50 translate-middle">
 
         <div class="card custom-card-style">
-            <div class="card-body p-5 text-center">
 
-                <h3 class="mb-4">Cadastro de Clientes</h3>
+            <div class="card-header text-center bg-white">
+                <h3>
+                    <img src="./assets/img/img_logo.png" alt="" style="max-height: 40px">
+                    Cadastro de Clientes
+                </h3>
+            </div>
+
+            <div class="card-body px-5 text-center">
 
                 <?php if (!empty($message)): ?>
                     <div class="mb-2 text-danger fw-bolder"><?php echo $message; ?></div>

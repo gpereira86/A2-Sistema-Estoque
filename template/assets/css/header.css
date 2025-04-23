@@ -1,0 +1,21 @@
+header {
+    background: #fff;
+    color: #1b365d;
+}
+
+a{
+    text-decoration: none;
+    color: #1b365d;
+    transition: color 0.4s ease;
+}
+
+a:hover{
+    color: #ced9e5;
+    text-decoration: underline;
+}
+
+#custom-logo-img-header {
+    width: 40px;
+    height: auto;
+}
+
