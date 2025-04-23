@@ -24,7 +24,6 @@ abstract class Model
     protected $order;
     protected $limit;
     protected $offset;
-    protected $message;
 
     /**
      * Construtor do Model.
@@ -84,15 +83,6 @@ abstract class Model
         return $this->error;
     }
 
-    /**
-     * Recupera o objeto de mensagens que contém as mensagens de erro ou sucesso.
-     *
-     * @return Message O objeto de mensagens.
-     */
-    public function message()
-    {
-        return $this->message;
-    }
 
     /**
      * Recupera o conjunto de dados armazenados no objeto.
@@ -332,7 +322,6 @@ abstract class Model
         if (empty($this->id)) {
             $id = $this->register($this->storage());
             if ($this->error) {
-                $this->message->messageError('Erro no sistema ao tentar registrar os dados');
                 return false;
             }
         }
@@ -341,7 +330,6 @@ abstract class Model
             $id = $this->id;
             $this->update($this->storage(), "id = {$id}");
             if ($this->error) {
-                $this->message->messageError('Erro no sistema ao tentar atualizar os dados');
                 return false;
             }
         }

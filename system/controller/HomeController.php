@@ -14,4 +14,11 @@ class HomeController
 
         Render::renderHTML('home');
     }
+
+    public function errorPage()
+    {
+        AuthMiddleware::check();
+
+        Render::renderHTML('error-page');
+    }
 }

@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="http://use.fontawesome.com/releases/v6.2.0/css/all.css"/>
   <Link rel="stylesheet" href="./assets/css/main.css">
   <Link rel="stylesheet" href="./assets/css/header.css">
+  <Link rel="stylesheet" href="./assets/css/table.css">
 </head>
 <body class="fade-in <?php echo $contentFile == 'login' ? 'custom-gradient-bg' : 'custom-light-bg'; ?>" >
 <main class="container ">

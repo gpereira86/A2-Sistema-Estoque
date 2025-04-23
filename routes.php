@@ -19,6 +19,9 @@ function defineRoutes($uri, $requestMethod)
         ['uri' => "{$baseSiteUri}logout", 'method' => 'GET', 'action' => [LoginController::class, 'logout']],
         ['uri' => "{$baseSiteUri}home", 'method' => 'GET', 'action' => [HomeController::class, 'index']],
         ['uri' => "{$baseSiteUri}products", 'method' => 'GET', 'action' => [ProductController::class, 'index']],
+        ['uri' => "{$baseSiteUri}products/store", 'method' => 'POST', 'action' => [ProductController::class, 'store']],
+        ['uri' => "{$baseSiteUri}products/update", 'method' => 'POST', 'action' => [ProductController::class, 'update']],
+        ['uri' => "{$baseSiteUri}error-page", 'method' => 'GET', 'action' => [HomeController::class, 'errorPage']],
     ];
 
     foreach ($routes as $route) {
