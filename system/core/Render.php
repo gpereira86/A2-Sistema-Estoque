@@ -1,6 +1,6 @@
 <?php
 
-namespace system\core;
+namespace System\Core;
 
 class Render
 {

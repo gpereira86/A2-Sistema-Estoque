@@ -2,8 +2,8 @@
 
 namespace System\Core;
 
-use System\Core\Connection;
-use System\Core\Message;
+use System\Core\DbConnection;
+
 
 
 /**
@@ -36,7 +36,6 @@ abstract class Model
     public function __construct(string $table)
     {
         $this->table = $table;
-        $this->message = new Message();
     }
 
     /**
@@ -171,7 +170,7 @@ abstract class Model
     public function result(bool $all = false)
     {
         try {
-            $stmt = Connection::getInstance()->prepare($this->query . $this->order . $this->limit . $this->offset);
+            $stmt = DbConnection::getInstance()->prepare($this->query . $this->order . $this->limit . $this->offset);
             $stmt->execute($this->params);
 
             if (!$stmt->rowCount()) {
@@ -202,10 +201,10 @@ abstract class Model
             $valores = ':' . implode(',:', array_keys($dataSet));
             $query = "INSERT INTO " . $this->table . "({$colunas}) VALUES ({$valores})";
 
-            $stmt = Connection::getInstance()->prepare($query);
+            $stmt = DbConnection::getInstance()->prepare($query);
             $stmt->execute($this->dataFilter($dataSet));
 
-            return Connection::getInstance()->lastInsertId();
+            return DbConnection::getInstance()->lastInsertId();
         } catch (\PDOException $ex) {
             $this->error = $ex->getCode();
             return null;
@@ -232,7 +231,7 @@ abstract class Model
 
             $query = "UPDATE " . $this->table . " SET {$set} WHERE {$terms}";
 
-            $stmt = Connection::getInstance()->prepare($query);
+            $stmt = DbConnection::getInstance()->prepare($query);
             $stmt->execute($this->dataFilter($dataSet));
 
             return ($stmt->rowCount() ?? 1);
@@ -282,6 +281,12 @@ abstract class Model
         return $search->result();
     }
 
+    public function searchByEmail(string $email)
+    {
+        $search = $this->search("email = '{$email}'");
+        return $search->result();
+    }
+
     /**
      * Deleta um registro do banco de dados.
      *
@@ -293,7 +298,7 @@ abstract class Model
         try {
             $query = "DELETE FROM " . $this->table . " WHERE {$termos}";
 
-            $stmt = Connection::getInstance()->prepare($query);
+            $stmt = DbConnection::getInstance()->prepare($query);
             $stmt->execute();
 
             return true;
@@ -311,7 +316,7 @@ abstract class Model
     public function amount(): int
     {
 
-        $stmt = Connection::getInstance()->prepare($this->query);
+        $stmt = DbConnection::getInstance()->prepare($this->query);
         $stmt->execute($this->params);
 
         return $stmt->rowCount();
@@ -352,6 +357,6 @@ abstract class Model
      */
     private function lastId(): int
     {
-        return Connection::getInstance()->query("SELECT MAX(id) FROM " . $this->table)->fetchColumn() + 1;
+        return DbConnection::getInstance()->query("SELECT MAX(id) FROM " . $this->table)->fetchColumn() + 1;
     }
 }

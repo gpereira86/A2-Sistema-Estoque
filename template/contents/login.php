@@ -1,26 +1,36 @@
-<main>
-    <div class="container py-5 h-100">
-        <div class="d-flex justify-content-center align-items-center">
-            <div class="card shadow-2-strong" style="border-radius: 1rem;">
-                <div class="card-body p-5 text-center">
-                    <h3 class="mb-4">Cadastro de Clientes</h3>
+<main class="fade-in">
+    <div class="position-absolute top-50 start-50 translate-middle">
 
-                    <form method="post">
-                        <div data-mdb-input-init class="form-outline mb-4">
-                            <input name="email" type="email" id="typeEmailX-2" class="form-control form-control-lg" placeholder="E-mail"/>
-                        </div>
+        <div class="card custom-card-style">
+            <div class="card-body p-5 text-center">
 
-                        <div data-mdb-input-init class="form-outline mb-4">
-                            <input name="password" type="password" id="typePasswordX-2" class="form-control form-control-lg" placeholder="Senha"/>
-                        </div>
+                <h3 class="mb-4">Cadastro de Clientes</h3>
 
-                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block" type="submit">
-                            Login
-                        </button>
-                    </form>
+                <?php if (!empty($message)): ?>
+                    <div class="mb-2 text-danger fw-bolder"><?php echo $message; ?></div>
+                <?php endif; ?>
 
-                </div>
+                <form method="post">
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <input name="email" type="email" id="typeEmailX-2"
+                               class="form-control form-control-lg <?php echo $emailValidator ?? ''; ?>"
+                               placeholder="E-mail" value="<?php echo $email ?? ''; ?>"/>
+                    </div>
+
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <input name="password" type="password" id="typePasswordX-2"
+                               class="form-control form-control-lg <?php echo $passwordValidator ?? ''; ?>"
+                               placeholder="Senha" value=""/>
+                    </div>
+
+                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block"
+                            type="submit">
+                        Login
+                    </button>
+                </form>
+
             </div>
         </div>
     </div>
+
 </main>

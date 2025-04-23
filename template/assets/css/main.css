@@ -9,3 +9,27 @@ body {
     background-color: #151515;
     color: white;
 }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+.custom-card-style{
+    border-radius: 1rem;
+    width: 450px;
+}
+
+@media (max-width: 450px) {
+    .custom-card-style {
+        width: 90vw;
+    }
+}

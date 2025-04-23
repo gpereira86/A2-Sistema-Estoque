@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="http://use.fontawesome.com/releases/v6.2.0/css/all.css"/>
   <Link rel="stylesheet" href="./assets/css/main.css">
 </head>
-<body class="m-1 px-4">
+<body>
 
 <?php $contentFile != 'login' ? include_once 'partials/header.php' : null; ?>
 

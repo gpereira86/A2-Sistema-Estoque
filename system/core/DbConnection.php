@@ -1,6 +1,6 @@
 <?php
 
-namespace system\core;
+namespace System\Core;
 
 use PDO;
 use PDOException;
@@ -12,7 +12,7 @@ use PDOException;
  * It provides a singleton instance of the PDO connection to ensure that only one connection is made
  * throughout the application lifecycle.
  */
-class DbConection
+class DbConnection
 {
 
     private static $instancia;

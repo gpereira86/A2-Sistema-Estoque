@@ -1,6 +1,6 @@
 <?php
 
-namespace system\core;
+namespace System\Core;
 
 /**
  * Helper class providing various utility methods for common tasks within the application.
@@ -61,7 +61,7 @@ class Helpers
      * @param string|null $url The slug (or URL) to redirect to. If not provided, the user is redirected to the home page.
      * @return void
      */
-    public static function redirectUrl(string $url = null): void
+    public static function redirectToUrl(string $url = null): void
     {
         header('HTTP/1.1 302 found');
 
