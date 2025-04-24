@@ -23,9 +23,10 @@
 
 <?php $contentFile != 'login' ? include_once 'partials/footer.php' : null; ?>
 
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" ></script>
-<script src="./front-end/view/assets/js/main.js"></script>
-<script src="./assets/js/includePage.js"></script>
+<script src="./assets/js/main.js"></script>
+<script src="./assets/js/tableorder.js"></script>
 
 </body>
 </html>

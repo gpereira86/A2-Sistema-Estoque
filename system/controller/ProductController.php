@@ -5,6 +5,7 @@ namespace System\Controller;
 use System\Core\AuthMiddleware;
 use System\Core\Helpers;
 use System\Core\Render;
+use System\Model\CategoriesModel;
 use System\Model\ProductsModel;
 
 class ProductController
@@ -15,7 +16,11 @@ class ProductController
         AuthMiddleware::check();
 
         $itemsInstance = new ProductsModel();
-        $items = $itemsInstance->search()->result(true);
+        $items = $itemsInstance->searchWithCategory("user_id = {$_SESSION['auth']['id']}");
+
+        $categories = new CategoriesModel();
+        $categories = $categories->search()->result(true);
+
 
         $errorMessages = $_SESSION['errors'] ?? [];
         $successMessages = $_SESSION['success'] ?? [];
@@ -24,7 +29,8 @@ class ProductController
         unset($_SESSION['errors'], $_SESSION['success'], $_SESSION['old']);
 
         return Render::renderHTML('products', [
-            'itens' => $items, // Corrigido o nome da variável para corresponder ao array correto
+            'itens' => $items,
+            'categories' => $categories,
             'errorMessages' => $errorMessages,
             'successMessages' => $successMessages,
             'old' => $old
@@ -54,6 +60,9 @@ class ProductController
         $productInstance->quantity = $dataSet['quantity'];
         $productInstance->status = $dataSet['status'];
         $productInstance->description = $dataSet['description'] ?? null;
+        $productInstance->category_id = $dataSet['category'];
+        $productInstance->user_id = $_SESSION['auth']['id'];
+        $productInstance->created_at = date('Y-m-d H:i:s');
 
 
         $savedStore = $productInstance->save();
@@ -68,9 +77,129 @@ class ProductController
         return Helpers::redirectToUrl('products');
     }
 
-    public function update(int $id)
+    public function updateFillForm(int $id)
     {
-        var_dump('teste');
+        authMiddleware::check();
+
+        try {
+            $productToUpdate = (new ProductsModel())->searchById($id);
+
+            if ($productToUpdate !== true) {
+                $_SESSION['old'] = (array) $productToUpdate->data();
+            } else {
+                $_SESSION['errors'] = ["Item não localizado!"];
+            }
+
+        } catch (\Exception $e) {
+            $_SESSION['errors'] = ["Algo deu errado! | Erro: ". $e];
+        } finally {
+            Helpers::redirectToUrl("products");
+        }
+    }
+
+    public function updated()
+    {
+        authMiddleware::check();
+
+        $dataSet = array_filter($_POST, function($value) {
+            return $value !== '';
+        });
+
+        $validated = $this->updatedValidator($dataSet);
+
+        if ($validated !== true) {
+            $_SESSION['errors'] = $validated;
+            $_SESSION['old'] = $dataSet;
+            return Helpers::redirectToUrl('products');
+        }
+
+        try {
+            $productInstance = new ProductsModel();
+
+            $productInstance->id = $dataSet['id'];
+            $productInstance->productname = $dataSet['productname'];
+            $productInstance->price = $dataSet['price'] ?? 0;
+            $productInstance->quantity = $dataSet['quantity'];
+            $productInstance->status = $dataSet['status'];
+            $productInstance->description = $dataSet['description'] ?? null;
+            $productInstance->category_id = $dataSet['category_id'];
+            $productInstance->user_id_updated = $_SESSION['auth']['id'];
+            $productInstance->uploaded_at = date('Y-m-d H:i:s');
+
+            $savedStore = $productInstance->save();
+
+            if ($savedStore) {
+                $_SESSION['success'] = ['Produto atualizado com sucesso!'];
+            } else {
+                $_SESSION['errors'] = ['Erro ao atualizar produto!'];
+                $_SESSION['old'] = $dataSet;
+            }
+
+        } catch (\Exception $e) {
+            $_SESSION['errors'] = ["Algo deu errado! | Erro: ". $e];
+        } finally {
+            Helpers::redirectToUrl("products");
+        }
+    }
+
+    public function deleted(int $id)
+    {
+        authMiddleware::check();
+        try {
+            $product = (new ProductsModel())->searchById($id);
+
+            $validated = $this->deletedValidator($product);
+
+            if ($validated !== true) {
+                $_SESSION['errors'] = $validated;
+                return Helpers::redirectToUrl('products');
+            }
+
+            if ($product) {
+                $productName = $product->productname;
+                $product->delete("id = {$id}");
+                $_SESSION['success'] = ["Item <strong>{$productName}</strong> deletado com sucesso!"];
+            } else {
+                $_SESSION['errors'] = ['Erro ao tentar deletar o item, atualize a página e verifique se é um item existente.'];
+            }
+
+        } catch (\Exception $e) {
+            $_SESSION['errors'] = ["Algo deu errado! | Erro: ". $e];
+        } finally {
+            Helpers::redirectToUrl("products");
+        }
+    }
+
+    private function updatedValidator(array $data): bool|array
+    {
+        $productCodeVeryfied = (new ProductsModel())->searchById($data['id']);
+        
+        if ($productCodeVeryfied->productcode != $data['productcode']) {
+            
+            $this->errors[] = "O código do produto não pode ser alterado!";
+        }
+
+        $validated = $this->validator($data);
+
+        if ($validated !== true) {
+            $_SESSION['errors'] = $validated;
+            $_SESSION['old'] = $data;
+        }
+
+        return empty($this->errors) ? true : $this->errors;
+    }
+
+    private function deletedValidator(object $data): bool|array
+    {
+        if ($data->quantity > 0){
+            $this->errors[] = "Quantidade do item: <strong>'{$data->productname}'</strong> maior do que 0. O item não pode ser excluído";
+        }
+
+        if ($data->status == 1){
+            $this->errors[] = "Item: <strong>{$data->productname}</strong> marcado como ativo. O item não pode ser excluído";
+        }
+
+        return empty($this->errors) ? true : $this->errors;
     }
 
     private function validator(array $data): bool|array
@@ -79,7 +208,8 @@ class ProductController
             'productcode' => 'Código do item',
             'productname' => 'Item',
             'quantity'    => 'Quantidade',
-            'status'      => 'Status'
+            'status'      => 'Status',
+            'category_id' => 'Categoria',
         ];
 
         foreach ($fieldLabels as $field => $label) {
@@ -97,8 +227,10 @@ class ProductController
             $this->errors[] = "O '{$fieldLabels['productcode']}' deve ser um número inteiro maior que zero.";
         }
 
-        if ((new ProductsModel())->search("productcode = {$data['productcode']}")->result()) {
-            $this->errors[] = "'{$fieldLabels['productcode']}' já existe em sistema.";
+        if (!$data['id']){
+            if ((new ProductsModel())->search("productcode = {$data['productcode']}")->result()) {
+                $this->errors[] = "'{$fieldLabels['productcode']}' já existe em sistema.";
+            }
         }
 
         if (strlen(trim($data['productname'])) < 3) {
@@ -114,7 +246,7 @@ class ProductController
         }
 
         if (!in_array((string)$data['status'], ['0', '1'], true)) {
-            $this->errors[] = "O '{$fieldLabels['status']}' deve ser '1' para Ativo ou '0' para Inativo.";
+            $this->errors[] = "O '{$fieldLabels['status']}' deve ser preenchido com Ativo ou Inativo.";
         }
 
         return empty($this->errors) ? true : $this->errors;

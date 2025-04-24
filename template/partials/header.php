@@ -1,7 +1,7 @@
 <header class="d-flex align-items-center fixed-top fade-in py-3 shadow-sm">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between flex-wrap">
 
-        <a href="#" class="d-flex align-items-center mb-2 mb-lg-0">
+        <a href="<?php echo \System\Core\Helpers::url(); ?>" class="d-flex align-items-center mb-2 mb-lg-0 not-underline">
             <img id="custom-logo-img-header" src="./assets/img/img_logo_no_bg.png" alt="Logo" class="me-2">
             <h1 class="m-0"><?php echo $title ?? SITEFUNCTIONNAME; ?></h1>
         </a>

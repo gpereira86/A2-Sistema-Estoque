@@ -22,10 +22,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
             </div>
         <?php endif; ?>
-        <?php echo isset($old['id']) ? 'Atualizar' : 'Cadastrar'; ?>
-        <form id="products-form"
-              action="<?php echo \System\Core\Helpers::url(isset($old['id']) ? 'products/updated' : 'products/store'); ?>"
-              method="POST">
+
+        <form id="products-form" action="<?php echo \System\Core\Helpers::url('products/store'); ?>" method="POST">
 
             <input type="hidden" name="id" value="<?php echo $old['id'] ?? ''; ?>">
 
@@ -38,8 +36,7 @@
                            placeholder="Código"
                            aria-label="Código do produto"
                            min="0" step="1"
-                           value="<?php echo $old['productcode'] ?? ''; ?>"
-                        <?php echo isset($old['id']) ? 'readonly' : ''; ?>>
+                           value="<?php echo $old['productcode'] ?? ''; ?>">
                 </div>
 
                 <div class="col-sm col-12">
@@ -90,14 +87,13 @@
                 </div>
 
                 <div class="col-sm col-12">
-                    <select name="category_id" class="form-control mb-2 text-center" aria-label="Status do produto"
-                            required>
-                        <option value="" disabled <?= !isset($old['category_id']) ? 'selected' : '' ?>>
+                    <select name="category" class="form-control mb-2 text-center" aria-label="Status do produto" required>
+                        <option value="" disabled <?= !isset($old['category']) ? 'selected' : '' ?>>
                             >Selecione a categoria<
                         </option>
 
                         <?php foreach ($categories as $category): ?>
-                            <option value="<?php echo $category->id; ?>" <?= isset($old['category_id']) && $old['category_id'] == $category->id ? 'selected' : ''; ?>>
+                            <option value="<?php echo $category->id; ?>" <?= isset($old['category']) && $old['category'] == '1' ? 'selected' : (isset($_POST['category']) && $_POST['category'] == '1' ? 'selected' : '') ?>>
                                 <?php echo $category->category; ?>
                             </option>
                         <?php endforeach; ?>
@@ -120,10 +116,10 @@
 
             <div class="text-center">
                 <button class="btn btn-primary mt-3" type="submit">
-                    <?php echo isset($old['id']) ? 'Atualizar' : 'Cadastrar'; ?>
+                    Cadastrar
                 </button>
 
-                <button id="clear-button" class="btn btn-secondary mt-3" type="button">
+                <button class="btn btn-secondary mt-3" type="reset">
                     Limpar Formulário
                 </button>
 
@@ -146,34 +142,35 @@
                                 <div class="card-body p-0">
                                     <div class="table-responsive table-scroll" data-mdb-perfect-scrollbar="true"
                                          style="position: relative; max-height: 500px">
-                                        <table id="product-table" class="table table-striped mb-0">
+                                        <table class="table table-striped mb-0">
                                             <thead style="background-color: #202a44;">
                                             <tr>
-                                                <th class="sortable" data-col="0"  scope="col"
-                                                    style="background-color: transparent; color: #ffffff;">Id <span class="arrow">⇅</span>
+                                                <th scope="col"
+                                                    style="background-color: transparent; color: #ffffff;">Id
                                                 </th>
-                                                <th data-col="1" scope="col"
+                                                <th scope="col"
                                                     style="background-color: transparent; color: #ffffff;">Código
                                                 </th>
-                                                <th class="sortable" data-col="2" scope="col"
-                                                    style="background-color: transparent; color: #ffffff;">Item <span class="arrow">⇅</span>
+                                                <th scope="col"
+                                                    style="background-color: transparent; color: #ffffff;">Item
                                                 </th>
-                                                <th class="sortable" data-col="3" scope="col"
-                                                    style="background-color: transparent; color: #ffffff;">Categoria <span class="arrow">⇅</span>
+                                                <th scope="col"
+                                                    style="background-color: transparent; color: #ffffff;">Categoria
                                                 </th>
-                                                <th data-col="4" scope="col"
+                                                <th scope="col"
                                                     style="background-color: transparent; color: #ffffff;">Descrição
                                                 </th>
-                                                <th class="sortable" data-col="5" scope="col"
-                                                    style="background-color: transparent; color: #ffffff;">Valor Unitário <span class="arrow">⇅</i></span>
+                                                <th scope="col"
+                                                    style="background-color: transparent; color: #ffffff;">Valor
+                                                    Unitário
                                                 </th>
-                                                <th class="sortable" data-col="6" scope="col"
-                                                    style="background-color: transparent; color: #ffffff;">Quantidade <span class="arrow">⇅</span>
+                                                <th scope="col"
+                                                    style="background-color: transparent; color: #ffffff;">Quantidade
                                                 </th>
-                                                <th class="sortable" data-col="7" scope="col"
-                                                    style="background-color: transparent; color: #ffffff;">Status <span class="arrow">⇅</span>
+                                                <th scope="col"
+                                                    style="background-color: transparent; color: #ffffff;">Status
                                                 </th>
-                                                <th data-col="8" scope="col"
+                                                <th scope="col"
                                                     style="background-color: transparent; color: #ffffff;">Ação
                                                 </th>
                                             </tr>
@@ -188,15 +185,14 @@
                                                         <td class="text-start"><?php echo mb_strimwidth($item->categoryName, 0, 40, '...') ?></td>
 
 
+
                                                         <td class="text-start"><?php echo $item->description ? mb_strimwidth($item->description, 0, 30, '...') : '-' ?></td>
                                                         <td><?php echo 'R$ ' . number_format($item->price, 2, ',', '.'); ?></td>
                                                         <td><?php echo $item->quantity ?></td>
                                                         <td class="text-<?php echo $item->status == 0 ? 'danger' : 'success'; ?>"><?php echo $item->status == 0 ? 'Inativo' : 'Ativo'; ?></td>
                                                         <td>
-                                                            <a href="<?php echo \System\Core\Helpers::url('products/update/' . $item->id); ?>"
-                                                               class="me-3"><i class="fa-regular fa-pen-to-square"></i></a>
-                                                            <a href="<?php echo \System\Core\Helpers::url('products/deleted/' . $item->id); ?>"><i
-                                                                        class="fa-regular fa-trash-can"></i></a>
+                                                            <a href="<?php echo \System\Core\Helpers::url('products/update'); ?>" class="me-3"><i class="fa-regular fa-pen-to-square"></i></a>
+                                                            <a href="<?php echo \System\Core\Helpers::url('products/deleted/'.$item->id); ?>" ><i class="fa-regular fa-trash-can"></i></a>
                                                         </td>
                                                     </tr>
                                                 <?php endforeach; ?>

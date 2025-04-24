@@ -5,6 +5,10 @@ table td, table th {
     overflow: hidden;
 }
 
+th.orderable {
+    cursor: pointer;
+}
+
 .card {
     border-radius: .5rem;
 }
@@ -16,6 +20,7 @@ table td, table th {
 .table-scroll table thead th {
     font-size: 1.25rem;
 }
+
 thead {
     top: 0;
     position: sticky;

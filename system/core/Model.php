@@ -298,6 +298,16 @@ abstract class Model
         }
     }
 
+
+    public function searchWithCategory(string $term = null)
+    {
+        $params = $term !== null ? $term : null;
+        $this->query = "SELECT p.*, c.category AS categoryName FROM {$this->table} AS p JOIN categories AS c ON p.category_id = c.id WHERE {$params}";
+
+        return $this->result(true);
+    }
+
+
     /**
      * Retorna o número de registros encontrados pela consulta.
      *
