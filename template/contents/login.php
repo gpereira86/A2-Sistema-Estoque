@@ -6,7 +6,7 @@
             <div class="card-header text-center bg-white">
                 <h3>
                     <img src="./assets/img/img_logo.png" alt="" style="max-height: 40px">
-                    Cadastro de Clientes
+                    Sistema de Estoque
                 </h3>
             </div>
 

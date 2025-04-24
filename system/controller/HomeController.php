@@ -5,6 +5,8 @@ namespace System\Controller;
 use System\Core\AuthMiddleware;
 use System\Core\Helpers;
 use System\Core\Render;
+use System\Model\CategoriesModel;
+use System\Model\ProductsModel;
 
 class HomeController
 {
@@ -12,13 +14,14 @@ class HomeController
     {
         AuthMiddleware::check();
 
-        Render::renderHTML('home');
+        $items = (new ProductsModel())->searchWithCategory()->result(true);
+        $categories = (new CategoriesModel())->search()->result(true);
+
+        Render::renderHTML('home', [
+            'items' => $items,
+            'categories' => $categories
+        ]);
     }
 
-    public function errorPage()
-    {
-        AuthMiddleware::check();
 
-        Render::renderHTML('error-page');
-    }
 }

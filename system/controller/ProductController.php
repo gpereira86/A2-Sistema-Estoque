@@ -16,7 +16,7 @@ class ProductController
         AuthMiddleware::check();
 
         $itemsInstance = new ProductsModel();
-        $items = $itemsInstance->searchWithCategory("user_id = {$_SESSION['auth']['id']}");
+        $items = $itemsInstance->searchWithCategory("user_id = {$_SESSION['auth']['id']}")->result(true);
 
         $categories = new CategoriesModel();
         $categories = $categories->search()->result(true);
@@ -60,7 +60,7 @@ class ProductController
         $productInstance->quantity = $dataSet['quantity'];
         $productInstance->status = $dataSet['status'];
         $productInstance->description = $dataSet['description'] ?? null;
-        $productInstance->category_id = $dataSet['category'];
+        $productInstance->category_id = $dataSet['category_id'];
         $productInstance->user_id = $_SESSION['auth']['id'];
         $productInstance->created_at = date('Y-m-d H:i:s');
 

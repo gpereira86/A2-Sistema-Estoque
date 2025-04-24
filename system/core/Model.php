@@ -301,10 +301,20 @@ abstract class Model
 
     public function searchWithCategory(string $term = null)
     {
-        $params = $term !== null ? $term : null;
-        $this->query = "SELECT p.*, c.category AS categoryName FROM {$this->table} AS p JOIN categories AS c ON p.category_id = c.id WHERE {$params}";
+        $params = $term !== null ? "WHERE ".$term : '';
 
-        return $this->result(true);
+        $this->query = "
+        SELECT 
+            p.*, 
+            c.category AS categoryName,
+            u.name AS userName
+        FROM {$this->table} AS p
+        JOIN categories AS c ON p.category_id = c.id
+        JOIN users AS u ON p.user_id = u.id
+        {$params}
+    ";
+
+        return $this;
     }
 
 

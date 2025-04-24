@@ -4,6 +4,7 @@ use System\Core\Helpers;
 use System\Controller\LoginController;
 use System\Controller\HomeController;
 use System\Controller\ProductController;
+use System\Controller\ErrorController;
 
 function defineRoutes($uri, $requestMethod)
 {
@@ -23,7 +24,7 @@ function defineRoutes($uri, $requestMethod)
         ['uri' => "{$baseSiteUri}products/update/{id}", 'method' => 'GET', 'action' => [ProductController::class, 'updateFillForm']],
         ['uri' => "{$baseSiteUri}products/updated", 'method' => 'POST', 'action' => [ProductController::class, 'updated']],
         ['uri' => "{$baseSiteUri}products/deleted/{id}", 'method' => 'GET', 'action' => [ProductController::class, 'deleted']],
-        ['uri' => "{$baseSiteUri}error-page", 'method' => 'GET', 'action' => [HomeController::class, 'errorPage']],
+        ['uri' => "{$baseSiteUri}error-page", 'method' => 'GET', 'action' => [ErrorController::class, 'errorPage']],
     ];
 
     foreach ($routes as $route) {

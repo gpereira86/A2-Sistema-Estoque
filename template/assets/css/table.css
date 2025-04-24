@@ -5,6 +5,11 @@ table td, table th {
     overflow: hidden;
 }
 
+thead {
+    top: 0;
+    position: sticky;
+}
+
 th.orderable {
     cursor: pointer;
 }
@@ -21,7 +26,15 @@ th.orderable {
     font-size: 1.25rem;
 }
 
-thead {
-    top: 0;
-    position: sticky;
+#custom-size-home-table{
+    position: relative;
+    max-height: 35vw;
 }
+
+@media only screen and (max-width: 600px) {
+    #custom-size-home-table {
+        max-height: 85vw;
+    }
+}
+
+

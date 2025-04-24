@@ -1,10 +1,10 @@
-<div class="container text-center my-4">
+<div class="container text-center mb-4">
 
 
     <div class="container">
 
-        <h3 class="mb-4">
-            Cadastro de Produtos
+        <h3 id="form-title" class="mb-4">
+            <?php echo isset($old['id']) ? "Atualização do item <strong>{$old['productname']}</strong>" : 'Cadastro de Produtos'; ?>
         </h3>
 
         <?php if (!empty($errorMessages)): ?>
@@ -22,7 +22,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
             </div>
         <?php endif; ?>
-        <?php echo isset($old['id']) ? 'Atualizar' : 'Cadastrar'; ?>
+
+
         <form id="products-form"
               action="<?php echo \System\Core\Helpers::url(isset($old['id']) ? 'products/updated' : 'products/store'); ?>"
               method="POST">
@@ -37,7 +38,7 @@
                            class="form-control mb-2"
                            placeholder="Código"
                            aria-label="Código do produto"
-                           min="0" step="1"
+                           min="1" step="1"
                            value="<?php echo $old['productcode'] ?? ''; ?>"
                         <?php echo isset($old['id']) ? 'readonly' : ''; ?>>
                 </div>
@@ -119,9 +120,15 @@
             </div>
 
             <div class="text-center">
-                <button class="btn btn-primary mt-3" type="submit">
-                    <?php echo isset($old['id']) ? 'Atualizar' : 'Cadastrar'; ?>
-                </button>
+                <?php if(isset($old['id'])): ?>
+                    <button id="action-type-title"
+                            type="button"
+                            class="btn btn-primary mt-3">
+                        Atualizar
+                    </button>
+                <?php else: ?>
+                    <button id="action-type-title" class="btn btn-primary mt-3" type="submit">Cadastrar</button>
+                <?php endif; ?>
 
                 <button id="clear-button" class="btn btn-secondary mt-3" type="button">
                     Limpar Formulário
@@ -194,9 +201,17 @@
                                                         <td class="text-<?php echo $item->status == 0 ? 'danger' : 'success'; ?>"><?php echo $item->status == 0 ? 'Inativo' : 'Ativo'; ?></td>
                                                         <td>
                                                             <a href="<?php echo \System\Core\Helpers::url('products/update/' . $item->id); ?>"
-                                                               class="me-3"><i class="fa-regular fa-pen-to-square"></i></a>
-                                                            <a href="<?php echo \System\Core\Helpers::url('products/deleted/' . $item->id); ?>"><i
-                                                                        class="fa-regular fa-trash-can"></i></a>
+                                                               class="me-3"><i class="fa-regular fa-pen-to-square"></i>
+                                                            </a>
+
+                                                            <a href="#"
+                                                               class="trigger-action"
+                                                               data-url="<?php echo \System\Core\Helpers::url('products/deleted/' . $item->id); ?>"
+                                                               data-message="Tem certeza de que deseja excluir este item?"
+                                                               data-btn-class="btn-danger"
+                                                               data-title="Confirmar Exclusão">
+                                                                <i class="fa-regular fa-trash-can"></i>
+                                                            </a>
                                                         </td>
                                                     </tr>
                                                 <?php endforeach; ?>
@@ -217,3 +232,5 @@
 
 
 </div>
+
+<script src="./assets/js/validator.js"></script>
