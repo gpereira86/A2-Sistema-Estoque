@@ -12,7 +12,7 @@ use System\Model\ProductsModel;
  * Serviço responsável por operações de negócio relacionadas a produtos,
  * incluindo listagem, validação, criação, atualização e exclusão de produtos.
  *
- * @package System\services
+ * @package System\Services
  */
 class ProductService
 {

@@ -4,6 +4,8 @@
 ## Visão Geral
 Sistema de controle de estoque desenvolvido em PHP 8.0 puro, sem uso de frameworks ou Composer. Permite cadastro, listagem, edição e exclusão de produtos e categorias, além de autenticação de usuários.
 
+Deploy: https://estoque.glaucopereira.com
+
 ---
 
 ## Como Executar Localmente

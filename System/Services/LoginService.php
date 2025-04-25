@@ -10,7 +10,7 @@ use System\Core\AuthMiddleware;
  *
  * Serviço responsável pela validação de dados de login e autenticação de usuários.
  *
- * @package System\services
+ * @package System\Services
  */
 class LoginService
 {

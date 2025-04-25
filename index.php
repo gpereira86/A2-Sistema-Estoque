@@ -2,7 +2,7 @@
 /**
  * Entry point for the application.
  *
- * This script initializes the system by including the necessary files,
+ * This script initializes the System by including the necessary files,
  * retrieves the current request URI and method, and routes the request
  * to the appropriate handler using the defineRoutes function.
  *
@@ -16,10 +16,10 @@
  * @global string $_SERVER['REQUEST_METHOD'] The HTTP method of the current request.
  */
 
-require_once './system/Autoloader.php';
+require_once './System/Autoloader.php';
 require_once './routes.php';
-require_once './system/config.php';
-require_once './system/secureConfig.php'; // Carrega configurações sensíveis que devem ser ignoradas pelo controle de versão.
+require_once './System/config.php';
+require_once './System/secureConfig.php'; // Carrega configurações sensíveis que devem ser ignoradas pelo controle de versão.
 
 $uri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
