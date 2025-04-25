@@ -12,7 +12,7 @@ Deploy: https://estoque.glaucopereira.com
 O uso é intuitivo, seguem as orientações:
 
 * **Tela de login:** Colocar e-mail e senha (fornecidos nesta documentação) para acesso ao sistema
- ![img.png](documentation/img_telas/img.png)
+![img.png](documentation/img_telas/img.png)
 
 
 * **Home:** 
