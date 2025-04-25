@@ -4,33 +4,77 @@ namespace System\Core;
 
 use System\Core\DbConnection;
 
-
-
 /**
- * Classe Model
+ * Class Model
  *
- * Classe abstrata para interação com o banco de dados.
- * Fornece métodos para operações CRUD e manipulação de dados.
- * Implementa padrões comuns para filtragem, consulta e gerenciamento de dados no banco de dados.
+ * Classe base para interações com o banco de dados, fornecendo métodos genéricos
+ * para consulta, inserção, atualização, exclusão e manipulação de registros em uma tabela.
+ *
+ * @package System\Core
  */
 abstract class Model
 {
-
+    /**
+     * Conjunto de dados associado ao modelo.
+     * Armazena propriedades dinâmicas definidas via __set.
+     *
+     * @var \stdClass|null
+     */
     protected $dataSet;
+
+    /**
+     * Consulta SQL a ser executada.
+     *
+     * @var string|null
+     */
     protected $query;
+
+    /**
+     * Erro ocorrido durante a execução da última operação.
+     *
+     * @var mixed
+     */
     protected $error;
+
+    /**
+     * Parâmetros para query preparada.
+     *
+     * @var array|null
+     */
     protected $params;
+
+    /**
+     * Nome da tabela associada ao modelo.
+     *
+     * @var string
+     */
     protected $table;
+
+    /**
+     * Cláusula ORDER BY para a consulta.
+     *
+     * @var string|null
+     */
     protected $order;
+
+    /**
+     * Cláusula LIMIT para a consulta.
+     *
+     * @var string|null
+     */
     protected $limit;
+
+    /**
+     * Cláusula OFFSET para a consulta.
+     *
+     * @var string|null
+     */
     protected $offset;
 
     /**
-     * Construtor do Model.
+     * Inicializa o modelo com a tabela especificada.
      *
-     * Inicializa o nome da tabela e o objeto de mensagem.
-     *
-     * @param string $table Nome da tabela.
+     * @param string $table Nome da tabela no banco.
      */
     public function __construct(string $table)
     {
@@ -38,10 +82,10 @@ abstract class Model
     }
 
     /**
-     * Define a cláusula ORDER BY da SQL para a consulta.
+     * Define a ordenação (ORDER BY) para a consulta.
      *
-     * @param string $order A cláusula ORDER BY.
-     * @return $this A instância atual da classe.
+     * @param string $order Expressão de ordenação (ex.: 'created_at DESC').
+     * @return $this
      */
     public function order(string $order)
     {
@@ -50,10 +94,10 @@ abstract class Model
     }
 
     /**
-     * Define a cláusula LIMIT da SQL para a consulta.
+     * Define o limite de registros (LIMIT) para a consulta.
      *
-     * @param string $limit A cláusula LIMIT.
-     * @return $this A instância atual da classe.
+     * @param string $limit Número máximo de registros.
+     * @return $this
      */
     public function limit(string $limit)
     {
@@ -62,10 +106,10 @@ abstract class Model
     }
 
     /**
-     * Define a cláusula OFFSET da SQL para a consulta.
+     * Define o deslocamento (OFFSET) para a consulta.
      *
-     * @param string $offset A cláusula OFFSET.
-     * @return $this A instância atual da classe.
+     * @param string $offset Quantidade de registros a pular.
+     * @return $this
      */
     public function offset(string $offset)
     {
@@ -74,20 +118,19 @@ abstract class Model
     }
 
     /**
-     * Recupera o código de erro da última operação.
+     * Retorna o erro da última operação.
      *
-     * @return string|int O código de erro.
+     * @return mixed
      */
     public function error()
     {
         return $this->error;
     }
 
-
     /**
-     * Recupera o conjunto de dados armazenados no objeto.
+     * Retorna os dados carregados no modelo.
      *
-     * @return \stdClass O conjunto de dados.
+     * @return object|null
      */
     public function data()
     {
@@ -95,10 +138,10 @@ abstract class Model
     }
 
     /**
-     * Define uma propriedade no conjunto de dados.
+     * Captura atribuição dinâmica de propriedades e armazena no dataSet.
      *
-     * @param string $name O nome da propriedade.
-     * @param mixed $value O valor a ser definido.
+     * @param string $name Nome da propriedade.
+     * @param mixed $value Valor da propriedade.
      */
     public function __set($name, $value)
     {
@@ -110,10 +153,10 @@ abstract class Model
     }
 
     /**
-     * Verifica se uma propriedade existe no conjunto de dados.
+     * Verifica se propriedade dinâmica está definida.
      *
-     * @param string $name O nome da propriedade.
-     * @return bool Retorna true se a propriedade existir.
+     * @param string $name Nome da propriedade.
+     * @return bool
      */
     public function __isset($name)
     {
@@ -121,10 +164,10 @@ abstract class Model
     }
 
     /**
-     * Recupera uma propriedade do conjunto de dados.
+     * Retorna o valor de uma propriedade dinâmica.
      *
-     * @param string $name O nome da propriedade.
-     * @return mixed O valor da propriedade, ou null se não existir.
+     * @param string $name Nome da propriedade.
+     * @return mixed|null
      */
     public function __get($name)
     {
@@ -132,35 +175,36 @@ abstract class Model
     }
 
     /**
-     * Realiza uma busca no banco de dados, com filtragem opcional.
+     * Inicia uma consulta SELECT.
      *
-     * @param string|null $terms Termos de filtragem.
-     * @param string|null $params Parâmetros da consulta.
-     * @param string $columns As colunas a serem selecionadas.
-     * @return $this A instância atual da classe.
+     * @param string|null $terms Condições WHERE sem a palavra-chave WHERE.
+     * @param string|null $params Query string para parâmetros (ex.: 'id=1').
+     * @param string $columns Colunas a selecionar (padrão '*').
+     * @return $this
      */
     public function search(?string $terms = null, ?string $params = null, string $columns = '*')
     {
         if ($terms) {
-            $this->query = "SELECT {$columns} FROM " . $this->table . " WHERE {$terms}";
-            parse_str($params, $this->params);
+            $this->query = "SELECT {$columns} FROM {$this->table} WHERE {$terms}";
+            parse_str((string)$params, $this->params);
             return $this;
         }
 
-        $this->query = "SELECT {$columns} FROM " . $this->table;
+        $this->query = "SELECT {$columns} FROM {$this->table}";
         return $this;
     }
 
     /**
-     * Recupera os resultados da consulta.
+     * Executa a consulta gerada e retorna resultados.
      *
-     * @param bool $all Se for true, retorna todos os resultados.
-     * @return mixed Retorna os resultados ou null se não houver resultados.
+     * @param bool $all Se true, retorna todos os registros, caso contrário apenas o primeiro.
+     * @return array|object|null
      */
     public function result(bool $all = false)
     {
         try {
-            $stmt = DbConnection::getInstance()->prepare($this->query . $this->order . $this->limit . $this->offset);
+            $stmt = DbConnection::getInstance()
+                ->prepare($this->query . $this->order . $this->limit . $this->offset);
             $stmt->execute($this->params);
 
             if (!$stmt->rowCount()) {
@@ -179,17 +223,17 @@ abstract class Model
     }
 
     /**
-     * Registra um novo registro no banco de dados.
+     * Insere um novo registro na tabela.
      *
-     * @param array $dataSet Dados a serem inseridos no banco de dados.
-     * @return int|null O ID do novo registro, ou null se ocorreu um erro.
+     * @param array $dataSet Dados a serem inseridos (chave => valor).
+     * @return string|null ID do novo registro ou null em caso de falha.
      */
     protected function register(array $dataSet)
     {
         try {
             $colunas = implode(',', array_keys($dataSet));
             $valores = ':' . implode(',:', array_keys($dataSet));
-            $query = "INSERT INTO " . $this->table . "({$colunas}) VALUES ({$valores})";
+            $query = "INSERT INTO {$this->table}({$colunas}) VALUES ({$valores})";
 
             $stmt = DbConnection::getInstance()->prepare($query);
             $stmt->execute($this->dataFilter($dataSet));
@@ -202,24 +246,22 @@ abstract class Model
     }
 
     /**
-     * Atualiza um registro no banco de dados.
+     * Atualiza registros na tabela com base em critérios.
      *
-     * @param array $dataSet Dados a serem atualizados no banco de dados.
-     * @param string $terms Termos de filtragem para a atualização.
-     * @return int|null O número de linhas afetadas, ou null se ocorreu um erro.
+     * @param array $dataSet Dados a serem atualizados (chave => valor).
+     * @param string $terms Termos da cláusula WHERE (ex.: 'id=1').
+     * @return int|null Número de linhas afetadas ou null em caso de erro.
      */
     protected function update(array $dataSet, string $terms)
     {
         try {
             $set = [];
-
             foreach ($dataSet as $key => $value) {
-                $set[] = "{$key} =:{$key}";
+                $set[] = "{$key} = :{$key}";
             }
-
             $set = implode(', ', $set);
 
-            $query = "UPDATE " . $this->table . " SET {$set} WHERE {$terms}";
+            $query = "UPDATE {$this->table} SET {$set} WHERE {$terms}";
 
             $stmt = DbConnection::getInstance()->prepare($query);
             $stmt->execute($this->dataFilter($dataSet));
@@ -232,65 +274,64 @@ abstract class Model
     }
 
     /**
-     * Filtra os dados para evitar valores inválidos.
+     * Filtra e sanitiza valores para uso em consultas.
      *
-     * @param array $dataSet Dados a serem filtrados.
-     * @return array Os dados filtrados.
+     * @param array $dataSet Dados brutos.
+     * @return array Dados filtrados.
      */
     private function dataFilter(array $dataSet)
     {
         $filtered = [];
-
         foreach ($dataSet as $key => $value) {
-            $filtered[$key] = (is_null($value) ? null : filter_var($value, FILTER_DEFAULT));
+            $filtered[$key] = is_null($value) ? null : filter_var($value, FILTER_DEFAULT);
         }
-
         return $filtered;
     }
 
     /**
-     * Retorna os dados armazenados no objeto como um array.
+     * Retorna os dados atuais como array.
      *
-     * @return array Os dados do objeto.
+     * @return array
      */
     protected function storage()
     {
-        $dataSet = (array) $this->dataSet;
-        return $dataSet;
+        return (array)$this->dataSet;
     }
 
     /**
-     * Busca um registro pelo seu ID.
+     * Busca um registro pelo ID.
      *
-     * @param int $id O ID do registro a ser buscado.
-     * @return $this A instância atual da classe.
+     * @param int $id ID do registro.
+     * @return object|null
      */
     public function searchById(int $id)
     {
-        $search = $this->search("id = {$id}");
-        return $search->result();
-    }
-
-    public function searchByEmail(string $email)
-    {
-        $search = $this->search("email = '{$email}'");
-        return $search->result();
+        return $this->search("id = {$id}")->result();
     }
 
     /**
-     * Deleta um registro do banco de dados.
+     * Busca um registro pelo e-mail.
      *
-     * @param string $termos Termos de filtragem para a exclusão.
-     * @return bool|null Retorna true se a exclusão foi bem-sucedida, ou null se ocorreu um erro.
+     * @param string $email E-mail a ser pesquisado.
+     * @return object|null
      */
-    public function delete(string $termos)
+    public function searchByEmail(string $email)
+    {
+        return $this->search("email = '{$email}'")->result();
+    }
+
+    /**
+     * Exclui registros com base em critérios.
+     *
+     * @param string $terms Critérios da cláusula WHERE.
+     * @return bool|null True em caso de sucesso, null em caso de erro.
+     */
+    public function delete(string $terms)
     {
         try {
-            $query = "DELETE FROM " . $this->table . " WHERE {$termos}";
-
+            $query = "DELETE FROM {$this->table} WHERE {$terms}";
             $stmt = DbConnection::getInstance()->prepare($query);
             $stmt->execute();
-
             return true;
         } catch (\PDOException $ex) {
             $this->error = $ex->getCode();
@@ -298,44 +339,32 @@ abstract class Model
         }
     }
 
-
+    /**
+     * Inicia consulta com junções para categoria e usuário.
+     *
+     * @param string|null $term Condição para compor o WHERE (ex.: 'id=1').
+     * @return $this
+     */
     public function searchWithCategory(string $term = null)
     {
-        $params = $term !== null ? "WHERE ".$term : '';
-
-        $this->query = "
-        SELECT 
-            p.*, 
-            c.category AS categoryName,
-            u.name AS userName
-        FROM {$this->table} AS p
-        JOIN categories AS c ON p.category_id = c.id
-        JOIN users AS u ON p.user_id = u.id
-        {$params}
-    ";
-
+        $params = $term !== null ? "WHERE {$term}" : '';
+        $this->query = <<<SQL
+            SELECT
+                p.*,
+                c.category AS categoryName,
+                u.name AS userName
+            FROM {$this->table} AS p
+            JOIN categories AS c ON p.category_id = c.id
+            JOIN users AS u ON p.user_id = u.id
+            {$params}
+            SQL;
         return $this;
     }
 
-
     /**
-     * Retorna o número de registros encontrados pela consulta.
+     * Salva o registro em banco: insere se não existir ID ou atualiza caso contrário.
      *
-     * @return int O número de registros encontrados.
-     */
-    public function amount(): int
-    {
-
-        $stmt = DbConnection::getInstance()->prepare($this->query);
-        $stmt->execute($this->params);
-
-        return $stmt->rowCount();
-    }
-
-    /**
-     * Salva o registro no banco de dados. Realiza inserção ou atualização dependendo da presença de um ID.
-     *
-     * @return bool Retorna true se a operação foi bem-sucedida, ou false se ocorreu um erro.
+     * @return bool True em caso de sucesso, false em caso de falha.
      */
     public function save(): bool
     {
@@ -358,13 +387,4 @@ abstract class Model
         return true;
     }
 
-    /**
-     * Retorna o próximo ID disponível para inserção.
-     *
-     * @return int O próximo ID disponível.
-     */
-    private function lastId(): int
-    {
-        return DbConnection::getInstance()->query("SELECT MAX(id) FROM " . $this->table)->fetchColumn() + 1;
-    }
 }

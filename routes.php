@@ -19,6 +19,7 @@ function defineRoutes($uri, $requestMethod)
         ['uri' => $baseSiteUri, 'method' => 'POST', 'action' => [LoginController::class, 'store']],
         ['uri' => "{$baseSiteUri}logout", 'method' => 'GET', 'action' => [LoginController::class, 'logout']],
         ['uri' => "{$baseSiteUri}home", 'method' => 'GET', 'action' => [HomeController::class, 'index']],
+        ['uri' => "{$baseSiteUri}home/deleted/{id}", 'method' => 'GET', 'action' => [HomeController::class, 'deleted']],
         ['uri' => "{$baseSiteUri}products", 'method' => 'GET', 'action' => [ProductController::class, 'index']],
         ['uri' => "{$baseSiteUri}products/store", 'method' => 'POST', 'action' => [ProductController::class, 'store']],
         ['uri' => "{$baseSiteUri}products/update/{id}", 'method' => 'GET', 'action' => [ProductController::class, 'updateFillForm']],
@@ -38,7 +39,6 @@ function defineRoutes($uri, $requestMethod)
             return $controller->$method(...$matches);
         }
     }
-
 
     http_response_code(404);
     Helpers::redirectToUrl('error-page');

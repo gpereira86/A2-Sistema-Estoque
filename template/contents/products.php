@@ -152,7 +152,7 @@
                             <div class="card">
                                 <div class="card-body p-0">
                                     <div class="table-responsive table-scroll" data-mdb-perfect-scrollbar="true"
-                                         style="position: relative; max-height: 500px">
+                                         style="position: relative; max-height: 440px">
                                         <table id="product-table" class="table table-striped mb-0">
                                             <thead style="background-color: #202a44;">
                                             <tr>
@@ -186,8 +186,8 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <?php if (isset($itens)) : ?>
-                                                <?php foreach ($itens as $item) : ?>
+                                            <?php if (isset($items)) : ?>
+                                                <?php foreach ($items as $item) : ?>
                                                     <tr>
                                                         <td><?php echo $item->id ?></td>
                                                         <td><?php echo $item->productcode ?></td>

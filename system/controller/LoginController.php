@@ -2,88 +2,97 @@
 
 namespace System\Controller;
 
-
 use System\Core\AuthMiddleware;
-use System\Core\Render;
-use System\Model\UsersModel;
 use System\Core\Helpers;
+use System\Services\LoginService;
 
+/**
+ * Class LoginController
+ *
+ * Controlador responsável pelas ações de login e logout do usuário, utilizando o serviço de login para validação e autenticação.
+ *
+ * @package System\Controller
+ */
 class LoginController
 {
-    public function login()
-    {
-        if (AuthMiddleware::checkLogin()){
-            Helpers::redirectToUrl('home');
-        };
+    /**
+     * Instância do serviço de login.
+     *
+     * @var LoginService
+     */
+    private $loginService;
 
-        return Render::renderHTML('login', ['title' => 'Login']);
+    /**
+     * LoginController constructor.
+     *
+     * Inicializa a instância do serviço de login.
+     */
+    public function __construct()
+    {
+        $this->loginService = new LoginService();
     }
 
+    /**
+     * Exibe a página de login.
+     *
+     * Este método verifica se o usuário já está autenticado. Caso esteja, redireciona para a página inicial.
+     * Caso contrário, exibe a tela de login.
+     *
+     * @return void
+     */
+    public function login()
+    {
+        if (AuthMiddleware::checkLogin()) {
+            Helpers::redirectToUrl('home');
+        }
+
+        return Helpers::view('login', ['title' => 'Login']);
+    }
+
+    /**
+     * Processa o login do usuário.
+     *
+     * Este método valida os dados de login (email e senha), verifica a autenticidade do usuário
+     * utilizando o serviço de login e, em caso de sucesso, cria a sessão de login. Caso contrário,
+     * exibe a tela de login exibindo o(s) erros.
+     *
+     * @return void
+     */
     public function store()
     {
         $login = array_filter($_POST);
 
-        if (empty($login)) {
-            return Render::renderHTML('login', [
-                'title' => 'Login',
-                'emailValidator' => 'is-invalid',
-                'passwordValidator' => 'is-invalid',
-                'message' => 'Preencha e-mail e senha'
-            ]);
+        $validationResult = $this->loginService->validateLoginData($login);
+
+        if ($validationResult) {
+            return Helpers::view('login', array_merge(['title' => 'Login', 'email' => $login['email']], $validationResult));
         }
 
-        if (empty($login['email'])) {
-            return Render::renderHTML('login', [
-                'title' => 'Login',
-                'emailValidator' => 'is-invalid',
-                'message' => 'E-mail precisa ser preenchido'
-            ]);
-        }
+        $authResult = $this->loginService->authenticateUser($login['email'], $login['password']);
 
-        if (!filter_var($login['email'], FILTER_VALIDATE_EMAIL)) {
-            return Render::renderHTML('login', [
-                'title' => 'Login',
-                'emailValidator' => 'is-invalid',
-                'message' => 'Formato do e-mail inválido'
-            ]);
-        }
-
-        if (empty($login['password'])) {
-            return Render::renderHTML('login', [
-                'title' => 'Login',
-                'email' => $login['email'],
-                'passwordValidator' => 'is-invalid',
-                'message' => 'O campo senha precisa ser preenchido'
-            ]);
-        }
-
-        $userInstance = new UsersModel();
-        $user = $userInstance->searchByEmail((string)$login['email']);
-
-        if (!$user || !password_verify((string)$login['password'], $user->password)) {
-            return Render::renderHTML('login', [
-                'title' => 'Login',
-                'email' => $login['email'],
-                'message' => 'E-mail ou senha inválidos',
-                'emailValidator' => 'is-invalid',
-                'passwordValidator' => 'is-invalid'
-            ]);
-        }
-
-        if (AuthMiddleware::create($user)){
-
+        if ($authResult === true) {
             return Helpers::redirectToUrl('home');
-        };
+        }
 
-        return Helpers::redirectToUrl('login');
-
+        return Helpers::view('login', [
+            'title' => 'Login',
+            'email' => $login['email'],
+            'message' => $authResult['message'],
+            'emailValidator' => $authResult['emailValidator'],
+            'passwordValidator' => $authResult['passwordValidator']
+        ]);
     }
 
+    /**
+     * Realiza o logout do usuário.
+     *
+     * Este método destrói a sessão de login do usuário e redireciona para a página de login.
+     *
+     * @return void
+     */
     public function logout()
     {
         AuthMiddleware::destroy();
-        sleep(1);
         return Helpers::redirectToUrl();
     }
-
 }

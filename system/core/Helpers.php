@@ -2,27 +2,24 @@
 
 namespace System\Core;
 
+use System\Core\Render;
+
 /**
- * Helper class providing various utility methods for common tasks within the application.
+ * Class Helpers
  *
- * This class includes methods that are frequently used across the application, such as:
- * - Checking if the environment is local or production.
- * - Constructing a full URL based on the current environment.
- * - Redirecting to specific URLs.
- * - Sending JSON responses with status codes.
+ * Contém métodos utilitários para ajudar em diversas funções comuns na aplicação, como renderização de views,
+ * geração de URLs e redirecionamentos.
  *
- * These methods are designed to simplify common tasks and improve code readability and maintainability.
+ * @package System\Core
  */
 class Helpers
 {
     /**
-     * Checks if the environment is local (localhost).
+     * Verifica se o ambiente é o localhost.
      *
-     * This method inspects the `SERVER_NAME` to determine if the application is running on a local server
-     * (e.g., localhost) or on a production environment. It returns true if the environment is localhost,
-     * and false otherwise.
+     * Este método verifica o nome do servidor e retorna true se estiver rodando no ambiente de desenvolvimento (localhost).
      *
-     * @return bool True if the environment is localhost, false otherwise.
+     * @return bool Retorna true se o servidor for localhost, caso contrário, false.
      */
     public static function localhost(): bool
     {
@@ -31,14 +28,27 @@ class Helpers
     }
 
     /**
-     * Constructs a full URL based on the current environment (development or production).
+     * Renderiza uma view HTML.
      *
-     * This method checks the value of `SERVER_NAME` to determine whether the environment is local (localhost)
-     * or production. It then appends the provided URL to the base URL of the appropriate environment.
-     * If no URL is provided, it defaults to the base URL of the environment.
+     * Este método usa o `Render` para renderizar a view desejada com os dados passados.
      *
-     * @param string|null $url The relative URL to append to the base URL.
-     * @return string The complete URL for the current environment.
+     * @param string $view Nome da view a ser renderizada.
+     * @param array $data Dados a serem passados para a view.
+     * @return null|string Retorna o HTML renderizado da view.
+     */
+    public static function view(string $view, array $data = []): null|string
+    {
+        return Render::renderHTML($view, $data);
+    }
+
+    /**
+     * Gera a URL completa com base no ambiente de desenvolvimento ou produção.
+     *
+     * Este método gera uma URL completa, levando em consideração o ambiente em que a aplicação
+     * está sendo executada (localhost ou produção).
+     *
+     * @param string|null $url URL relativa a ser concatenada à URL base do ambiente.
+     * @return string A URL completa gerada.
      */
     public static function url(string $url = null): string
     {
@@ -53,12 +63,11 @@ class Helpers
     }
 
     /**
-     * Redirects the user to a new URL based on the provided slug.
+     * Realiza um redirecionamento para uma URL.
      *
-     * This method performs a URL redirection using the provided slug (or URL). If no slug is provided,
-     * it defaults to redirecting the user to the home page. The redirection is performed with a 302 HTTP status code.
+     * Este método envia um cabeçalho HTTP 302 para redirecionar o usuário para uma URL específica ou para a URL base.
      *
-     * @param string|null $url The slug (or URL) to redirect to. If not provided, the user is redirected to the home page.
+     * @param string|null $url URL para redirecionamento. Se não fornecida, redireciona para a URL base.
      * @return void
      */
     public static function redirectToUrl(string $url = null): void
@@ -69,24 +78,5 @@ class Helpers
 
         header("location: {$local}");
         exit();
-    }
-
-    /**
-     * Sends a JSON response with a given status code.
-     *
-     * This method sends a JSON response back to the client. It allows specifying a custom HTTP status code
-     * for the response. By default, the status code is 200 (OK). The response is sent with the appropriate
-     * `Content-Type` header for JSON responses.
-     *
-     * @param array $data The data to send in the JSON response.
-     * @param int $statusCode The HTTP status code to use for the response. Defaults to 200 (OK).
-     * @return void
-     */
-    public static function sendResponse(array $data, int $statusCode = 200): void
-    {
-        header('Content-Type: application/json');
-        http_response_code($statusCode);
-        echo json_encode($data);
-
     }
 }

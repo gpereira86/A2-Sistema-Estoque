@@ -1,31 +1,34 @@
 <?php
 
 /**
- * Autoload function for automatically loading PHP classes.
+ * Arquivo de autoload PSR-4 simples.
  *
- * This function registers an autoloader for the application, ensuring that when a class is called,
- * its file is automatically loaded if it exists in the file system. The autoloader looks for
- * the class files in the directory above the current file and follows the PSR-4 standard for
- * namespace to file path resolution.
+ * Registra um autoloader que converte o nome da classe (incluindo namespace)
+ * em um caminho de arquivo relativo e faz require_once se o arquivo existir.
+ * Caso contrário, registra um erro no log e lança exceção.
  *
- * - `$class`: The name of the class being requested.
- * - `$baseDir`: The base directory where the classes are located (the parent directory of the current file).
- * - `$file`: The full path to the class file.
- *
- * If the class file is found, it is included with `require_once`. If the file is not found, an error is logged
- * and an exception is thrown to indicate the missing file.
- *
- * @throws Exception If the class file is not found, an exception is thrown.
+ * @see https://www.php-fig.org/psr/psr-4/
  */
-spl_autoload_register(function ($class) {
-    $baseDir = dirname(__DIR__) . '/';
 
-    $file = $baseDir . str_replace('\\', '/', $class) . '.php';
+spl_autoload_register(
+/**
+ * Função anônima de autoload.
+ *
+ * @param  string $class Nome totalmente qualificado da classe (namespace + nome da classe).
+ * @return void
+ * @throws \Exception Se o arquivo correspondente à classe não for encontrado.
+ */
+    function (string $class): void {
+        $baseDir = dirname(__DIR__) . '/';
 
-    if (file_exists($file)) {
-        require_once $file;
-    } else {
-        error_log("Error loading class {$class}: File {$file} not found.");
-        throw new Exception("Class file '{$class}' not found: {$file}");
+        $file = $baseDir . str_replace('\\', '/', $class) . '.php';
+
+        if (file_exists($file)) {
+            require_once $file;
+        } else {
+            error_log("Error loading class {$class}: File {$file} not found.");
+            throw new \Exception("Class file '{$class}' not found: {$file}");
+        }
     }
-});
+);
+

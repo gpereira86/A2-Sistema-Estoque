@@ -6,33 +6,33 @@ use PDO;
 use PDOException;
 
 /**
- * Database Connection Class
+ * Classe de Conexão com o Banco de Dados
  *
- * This class handles the connection to the MySQL database using the PDO (PHP Data Objects) extension.
- * It provides a singleton instance of the PDO connection to ensure that only one connection is made
- * throughout the application lifecycle.
+ * Esta classe gerencia a conexão com o banco de dados MySQL usando a extensão PDO (PHP Data Objects).
+ * Ela fornece uma instância singleton da conexão PDO para garantir que apenas uma conexão seja feita
+ * ao longo do ciclo de vida da aplicação.
  */
 class DbConnection
 {
 
-    private static $instancia;
+    private static $instance;
 
     /**
-     * Returns a PDO instance (singleton).
+     * Retorna uma instância PDO (singleton).
      *
-     * This method creates a new PDO connection to the MySQL database using the configuration constants
-     * from the system's configuration file. If an instance already exists, it returns the existing
-     * instance to ensure only one connection is used throughout the application.
+     * Este método cria uma nova conexão PDO com o banco de dados MySQL usando as constantes de configuração
+     * do arquivo de configuração do sistema. Se uma instância já existir, ele retorna a instância existente
+     * para garantir que apenas uma conexão seja usada ao longo da aplicação.
      *
-     * @return PDO The PDO instance representing the connection to the database.
-     * @throws PDOException If the connection cannot be established, an exception is thrown.
+     * @return PDO A instância PDO que representa a conexão com o banco de dados.
+     * @throws PDOException Se a conexão não puder ser estabelecida, uma exceção será lançada.
      */
     public static function getInstance(): PDO
     {
-        if (empty(self::$instancia)) {
+        if (empty(self::$instance)) {
 
             try {
-                self::$instancia = new PDO(
+                self::$instance = new PDO(
                     'mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME,
                     DB_USERNAME,
                     DB_PASSCODE,
@@ -44,28 +44,28 @@ class DbConnection
                     ]
                 );
             } catch (PDOException $ex) {
-                die("Connection error >>> " . $ex->getMessage());
+                die("Erro de conexão >>> " . $ex->getMessage());
             }
         }
-        return self::$instancia;
+        return self::$instance;
     }
 
     /**
-     * Constructor (protected).
+     * Construtor (protegido).
      *
-     * The constructor is protected to prevent creating instances directly via the constructor.
-     * The class follows the Singleton design pattern, so the only way to obtain an instance is
-     * through the `getInstance()` method.
+     * O construtor é protegido para impedir a criação de instâncias diretamente via o construtor.
+     * A classe segue o padrão de projeto Singleton, portanto, a única forma de obter uma instância é
+     * através do método `getInstance()`.
      */
     protected function __construct()
     {
     }
 
     /**
-     * Clone (private).
+     * Clonagem (privada).
      *
-     * The clone method is private to prevent cloning of the instance.
-     * As this class follows the Singleton pattern, cloning would violate the pattern.
+     * O método de clonagem é privado para impedir a clonagem da instância.
+     * Como esta classe segue o padrão Singleton, a clonagem violaria o padrão.
      */
     private function __clone()
     {

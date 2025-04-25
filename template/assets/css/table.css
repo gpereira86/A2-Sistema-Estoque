@@ -28,7 +28,7 @@ th.orderable {
 
 #custom-size-home-table{
     position: relative;
-    max-height: 35vw;
+    max-height: 33vw;
 }
 
 @media only screen and (max-width: 600px) {

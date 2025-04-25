@@ -1,0 +1,229 @@
+
+# Documentação Técnica – Sistema de Estoque (PHP 8.0 Puro)
+
+## Visão Geral
+Sistema de controle de estoque desenvolvido em PHP 8.0 puro, sem uso de frameworks ou Composer. Permite cadastro, listagem, edição e exclusão de produtos e categorias, além de autenticação de usuários.
+
+---
+
+## Como Executar Localmente
+
+1. Clone o repositório ou copie os arquivos para seu ambiente local.
+2. Configure o banco de dados MySQL com as tabelas `users`, `products`, `categories` (arquivo para criação de tabelas e inserção de dados [disponível aqui](documentation/DUMP_BD.sql)).
+3. Atualize os arquivos `system/config.php` e `system/secureConfig.php` com os dados do banco.
+4. Habilite o módulo `mod_rewrite` no Apache.
+5. Acesse `http://localhost/seu-projeto/` no navegador.
+
+---
+
+## Estrutura de Pastas
+
+```
+:root/
+├── .htaccess
+├── estrutura.txt
+├── index.php
+├── routes.php
+│
+├── .idea/
+│   ├── .gitignore
+│   ├── cadastro-clientes.iml
+│   ├── modules.xml
+│   ├── php.xml
+│   ├── vcs.xml
+│   └── workspace.xml
+│
+├── documentation/
+│   └── Teste_Tecnico_Estagio_Desenvolvimento_Web_A2[1].pdf
+│
+├── system/
+│   ├── Autoloader.php
+│   ├── config.php
+│   ├── secureConfig.php
+│   │
+│   ├── controller/
+│   │   ├── ErrorController.php
+│   │   ├── HomeController.php
+│   │   ├── LoginController.php
+│   │   └── ProductController.php
+│   │
+│   ├── core/
+│   │   ├── AuthMiddleware.php
+│   │   ├── DbConnection.php
+│   │   ├── Helpers.php
+│   │   ├── Model.php
+│   │   └── Render.php
+│   │
+│   ├── model/
+│   │   ├── CategoriesModel.php
+│   │   ├── ProductsModel.php
+│   │   └── UsersModel.php
+│   │
+│   └── services/
+│       ├── LoginService.php      
+│       └── ProductService.php 
+│
+└── template/
+    ├── master.php
+    │
+    ├── assets/   
+    │   ├── css/          
+    │   │   ├── header.css
+    │   │   ├── main.css
+    │   │   └── table.css
+    │   │
+    │   ├── img/ 
+    │   │   ├── error404.css
+    │   │   ├── img.png
+    │   │   ├── img_logo.png
+    │   │   └── img_logo_no_bg.png
+    │   │
+    │   └── js/ 
+    │       ├── filter-fields.js
+    │       ├── main.js
+    │       ├── modal.js
+    │       ├── tableorder.js
+    │       └── validator.js
+    │
+    ├── contents/
+    │   ├── error-page.php         
+    │   ├── home.php         
+    │   ├── login.php         
+    │   └── products.php         
+    │
+    └──partials/   
+        ├── header.php         
+        └── modal.php 
+
+```
+
+---  
+
+## Funcionalidades
+
+- **Autenticação de Usuários**  
+  Login e logout com verificação de sessão via `AuthMiddleware`.
+
+- **Gerenciamento de Produtos**
+    - Listagem com categorias e usuário responsável
+    - Criação, edição e exclusão com validação de dados
+    - Controle de status (ativo/inativo) e quantidade
+
+- **Categorias**  
+  CRUD básico (via `CategoriesModel`) para organizar produtos por categoria.
+
+- **Validações**
+    - Backend: regras em `ProductService` e `LoginService`
+    - Frontend: classes CSS (`is-invalid`) aplicadas dinamicamente
+
+- **Filtros e Ordenação**
+    - Ordenação customizada (`order`, `limit`, `offset`)
+    - Filtro por usuário logado e por categoria
+
+- **Templates Reutilizáveis**  
+  Layout principal (`master.php`) e partials (`header.php`, `modal.php`)
+
+---
+
+## Requisitos
+
+- **PHP:** 8.0 ou superior
+- **MySQL:** 5.7 ou superior
+- **Servidor Web:** Apache com `mod_rewrite` habilitado
+- **Extensões PHP:** PDO, mbstring, filter
+
+---
+
+## Banco de Dados
+
+### Estrutura das Tabelas
+
+```sql
+CREATE TABLE `categories` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `category` VARCHAR(50) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL,
+  `uploaded_at` TIMESTAMP NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `users` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `level` INT(2) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL,
+  `updated_at` TIMESTAMP NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `products` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `productcode` INT(20) NOT NULL UNIQUE,
+  `productname` VARCHAR(50) NOT NULL,
+  `description` TEXT NULL,
+  `price` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `quantity` INT NOT NULL,
+  `status` TINYINT(1) NOT NULL,
+  `category_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL,
+  `user_id_updated` INT NULL,
+  `uploaded_at` TIMESTAMP NULL,
+  PRIMARY KEY (`id`)
+);
+```
+
+---
+
+## Dependências
+
+- **PHP Puro** (sem frameworks, sem Composer)
+- **Extensões PHP**: PDO, mbstring, filter
+- CSS e JavaScript escritos manualmente
+
+---
+
+## Segurança
+
+- Credenciais sensíveis em `system/secureConfig.php`
+- Arquivo `.htaccess` protege pastas críticas
+- Middleware `AuthMiddleware` restringe acesso não autenticado
+
+---
+
+## Pontos de Extensão
+
+- **Novas Rotas**  
+  Edite o arquivo `routes.php` para adicionar caminhos e métodos HTTP.
+- **Controllers**  
+  Crie novos controllers em `system/controller` seguindo o padrão existente.
+- **Models**  
+  Adicione modelos em `system/model` que estendam `Core\Model`.
+- **Services**  
+  Implemente regras de negócio em `system/Services`.
+- **Views**  
+  Coloque novas views em `template/contents` e componentes reutilizáveis em `template/partials`.
+
+---
+
+## Usuário de Teste
+
+- **E-mail:** `teste@teste.com`
+- **Senha:** `123`
+
+---
+
+## Observações Finais
+
+Este sistema foi desenvolvido para demonstrar boas práticas em PHP 8.0 puro e arquitetura MVC simples.  
+Pode ser facilmente ampliado com:
+
+- Integração de APIs RESTful
+- Adoção de um framework PHP (Laravel, Symfony, etc.)
+- Camada de testes automatizados (PHPUnit)
+- Deploy em containers Docker  
+
+
+

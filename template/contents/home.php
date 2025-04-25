@@ -5,17 +5,33 @@
             Itens cadastrados
         </h3>
 
+        <?php if (!empty($errorMessages)): ?>
+            <div class="text-center alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                <?php foreach ($errorMessages as $message): ?>
+                    <div><i class="bi bi-exclamation-triangle-fill me-2"></i><?= $message ?></div>
+                <?php endforeach; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
+        <?php elseif (!empty($successMessages)): ?>
+            <div class="text-center alert alert-success alert-dismissible fade show mt-3" role="alert">
+                <?php foreach ($successMessages as $message): ?>
+                    <div><i class="bi bi-exclamation-triangle-fill me-2"></i><?= $message ?></div>
+                <?php endforeach; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
+        <?php endif; ?>
+
+
         <form method="get">
             <div class="container">
 
-
                 <div class="row justify-content-center mb-1">
-
+                    <h4>Filtros:</h4>
                     <div class="col-sm">
                         <input type="text" id="filter-name" class="form-control mb-2" placeholder="Filtrar por nome">
                     </div>
 
-                    <div class="col-sm">
+                    <div class="col-sm-2">
                         <select name="status" class="form-control mb-2 text-center" aria-label="Status do produto"
                                 required>
                             <option value="" disabled <?= !isset($old['status']) ? 'selected' : '' ?>>
@@ -148,16 +164,16 @@
                                                     <a href="#"
                                                        class="me-3 trigger-action"
                                                        data-url="<?php echo \System\Core\Helpers::url('products/update/' . $item->id); ?>"
-                                                       data-message="Deseja realmente editar este item?"
-                                                       data-btn-class="btn-primary"
+                                                       data-message= "Deseja realmente editar o item <?php echo $item->productname ?>?"
+                                                       data-btn-class="btn-warning"
                                                        data-title="Confirmar Edição">
                                                         <i class="fa-regular fa-pen-to-square"></i>
                                                     </a>
 
                                                     <a href="#"
                                                        class="trigger-action"
-                                                       data-url="<?php echo \System\Core\Helpers::url('products/deleted/' . $item->id); ?>"
-                                                       data-message="Tem certeza de que deseja excluir este item?"
+                                                       data-url="<?php echo \System\Core\Helpers::url('home/deleted/' . $item->id); ?>"
+                                                       data-message="Tem certeza de que deseja excluir este o item <?php echo $item->productname ?>?"
                                                        data-btn-class="btn-danger"
                                                        data-title="Confirmar Exclusão">
                                                         <i class="fa-regular fa-trash-can"></i>

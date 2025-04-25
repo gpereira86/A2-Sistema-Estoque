@@ -19,7 +19,7 @@
 require_once './system/Autoloader.php';
 require_once './routes.php';
 require_once './system/config.php';
-require_once './system/secureConfig.php'; // Loads sensitive configurations to be ignored by version control.
+require_once './system/secureConfig.php'; // Carrega configurações sensíveis que devem ser ignoradas pelo controle de versão.
 
 $uri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];

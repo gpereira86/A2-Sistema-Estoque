@@ -2,35 +2,39 @@
 
 namespace System\Core;
 
+/**
+ * Class Render
+ *
+ * Responsável por renderizar templates de conteúdo dentro de layouts HTML.
+ *
+ * Faz o buffering da saída, extrai variáveis de dados para uso nas views
+ * e inclui o conteúdo no layout especificado.
+ *
+ * @package System\Core
+ */
 class Render
 {
-
-
     /**
-     * Renders an HTML file and outputs its content to the browser.
+     * Renderiza um template HTML dentro de um layout.
      *
-     * This method is responsible for loading the specified HTML file, extracting any data passed
-     * as an associative array, and rendering the content. If the HTML file does not exist, it throws
-     * an exception with an error message.
+     * Este método carrega o layout e o conteúdo a partir dos arquivos PHP correspondentes,
+     * extrai as variáveis de dados para o escopo da view e captura a saída em buffer.
+     * Caso o layout ou o conteúdo não existam, exibe mensagem de erro.
      *
-     * It utilizes output buffering to capture the content of the HTML file and pass any variables
-     * extracted from the data array.
-     *
-     * @param string $file The path to the HTML file to be rendered.
-     * @param array $data Optional associative array of data to be passed to the HTML file.
-     * @throws \Exception If the specified HTML file is not found.
+     * @param string $contentFile Nome do arquivo de conteúdo (subpasta 'contents', sem a extensão '.php').
+     * @param array  $data        Array associativo de dados a serem extraídos para a view.
+     * @param string $layoutFile  Nome do arquivo de layout (padrão 'master', sem a extensão '.php').
+     * @return void
      */
-    public static function renderHTML($contentFile, $data = [], $layoutFile = 'master')
+    public static function renderHTML(string $contentFile, array $data = [], string $layoutFile = 'master'): void
     {
-        $layoutPath = './template/' . $layoutFile . '.php';
-
+        $layoutPath  = __DIR__ . '/../../template/' . $layoutFile . '.php';
         if (!file_exists($layoutPath)) {
             echo "Erro: Layout não encontrado!";
             return;
         }
 
-        $contentPath = './template/contents/' . $contentFile . '.php';
-
+        $contentPath = __DIR__ . '/../../template/contents/' . $contentFile . '.php';
         if (!file_exists($contentPath)) {
             echo "Erro: Página não encontrada!";
             return;
@@ -38,9 +42,9 @@ class Render
 
         ob_start();
         extract($data);
-        include($contentPath);
+        include $contentPath;
         $content = ob_get_clean();
 
-        include($layoutPath);
+        include $layoutPath;
     }
 }
