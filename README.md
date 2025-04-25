@@ -142,7 +142,7 @@ CREATE TABLE `products` (
   PRIMARY KEY (`id`)
 );
 ```
->**Nota:** Apesar de não gerado, há um relacionamento entre as tabelas users e prodcts e categories e products. Por escolha, esse relacionamento é tratado apenas dentro da lógica de Back-end, ao cadastrar e alterar informações.
+>**Nota:** Apesar de não gerado, há um relacionamento entre as tabelas users e products & categories e products. Por escolha, esse relacionamento é tratado apenas dentro da lógica de Back-end, ao cadastrar e alterar informações.
 > 
 > categories.id (1) ────< (N) products.category_id  
 > users.id (1) ───────< (N) products.user_id   
