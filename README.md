@@ -26,7 +26,7 @@ O uso é intuitivo, seguem as orientações:
 
 
 * **Cadastrar:** 
-  - Form para cadastro e edição de produtos com dica em texto dentro do input informando seu campo (validação de dados em tempo real).
+  - Form para cadastro e edição de produtos com dica em texto dentro do input e com validação de dados em tempo real
   - Listagem de itens cadastrados pelo usuário logado
   - Possibilidade de edição e exclusão de cada item (campo ação: 📝 edita e 🗑️ exclui)
   - 
