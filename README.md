@@ -11,7 +11,8 @@ Deploy: https://estoque.glaucopereira.com
 ## Uso
 O uso é intuitivo, seguem as orientações:
 
-* **Tela de login:** Colocar e-mail e senha (fornecidos nesta documentação) para acesso ao sistema
+* **Tela de login:** 
+  - Acessar com e-mail e senha (fornecidos nesta documentação) para acesso ao sistema
 ![img.png](documentation/img_telas/img.png)
 
 
