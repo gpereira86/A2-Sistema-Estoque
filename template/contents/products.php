@@ -174,8 +174,8 @@
                                                 <th class="sortable" data-col="5" scope="col"
                                                     style="background-color: transparent; color: #ffffff;">Valor Unitário <span class="arrow">⇅</i></span>
                                                 </th>
-                                                <th class="sortable" data-col="6" scope="col"
-                                                    style="background-color: transparent; color: #ffffff;">Quantidade <span class="arrow">⇅</span>
+                                                <th class="sortable" title="Quantidade" data-col="6" scope="col"
+                                                    style="background-color: transparent; color: #ffffff;">Qtde.<span class="arrow">⇅</span>
                                                 </th>
                                                 <th class="sortable" data-col="7" scope="col"
                                                     style="background-color: transparent; color: #ffffff;">Status <span class="arrow">⇅</span>
@@ -191,11 +191,17 @@
                                                     <tr>
                                                         <td><?php echo $item->id ?></td>
                                                         <td><?php echo $item->productcode ?></td>
-                                                        <td class="text-start"><?php echo mb_strimwidth($item->productname, 0, 40, '...') ?></td>
-                                                        <td class="text-start"><?php echo mb_strimwidth($item->categoryName, 0, 40, '...') ?></td>
+                                                        <td class="text-start" title="<?php echo htmlspecialchars($item->productname); ?>">
+                                                            <?php echo mb_strimwidth($item->productname, 0, 20, '...') ?>
+                                                        </td>
+                                                        <td class="text-start" title="<?php echo htmlspecialchars($item->categoryName); ?>">
+                                                            <?php echo mb_strimwidth($item->categoryName, 0, 40, '...') ?>
+                                                        </td>
 
 
-                                                        <td class="text-start"><?php echo $item->description ? mb_strimwidth($item->description, 0, 30, '...') : '-' ?></td>
+                                                        <td class="text-start" title="<?php echo htmlspecialchars($item->description); ?>">
+                                                            <?php echo $item->description ? mb_strimwidth($item->description, 0, 30, '...') : '-' ?>
+                                                        </td>
                                                         <td><?php echo 'R$ ' . number_format($item->price, 2, ',', '.'); ?></td>
                                                         <td><?php echo $item->quantity ?></td>
                                                         <td class="text-<?php echo $item->status == 0 ? 'danger' : 'success'; ?>"><?php echo $item->status == 0 ? 'Inativo' : 'Ativo'; ?></td>

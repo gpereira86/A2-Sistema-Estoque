@@ -8,6 +8,32 @@ Deploy: https://estoque.glaucopereira.com
 
 ---
 
+## Uso
+O uso é intuitivo, seguem as orientações:
+
+* **Tela de login:** Colocar e-mail e senha (fornecidos nesta documentação) para acesso ao sistema
+ ![img.png](documentation/img_telas/img.png)
+
+
+* **Home:** 
+  - Listagem geral de produtos cadastrados
+  - Possibilidade de filtragem da tabela
+  - Possibilidade de edição e exclusão de cada item (campo ação: 📝 edita e 🗑️ exclui)
+![img_1.png](documentation/img_telas/img_1.png)
+
+
+* **Cadastrar:** 
+  - Form para cadastro e edição de produtos com dica em texto dentro do input informando seu campo (validação de dados em tempo real).
+  - Listagem de itens cadastrados pelo usuário logado
+  - Possibilidade de edição e exclusão de cada item (campo ação: 📝 edita e 🗑️ exclui)
+![img_2.png](documentation/img_telas/img_2.png)
+
+>**Nota:** No canto superior direito (em todo site) é exibido o texto `logout`, clicando nele o sistema desloga o usuário e redireciona para tela de login.
+> 
+> Todas as rotas são protegidas, somente usuários logados podem acessar, inclusive a página de erro. Qualquer ação deslogada leva a tela de login, garantindo segurança da aplicação.
+
+---
+
 ## Como Executar Localmente
 
 1. Clone o repositório (comando no terminal: `git clone https://github.com/gpereira86/A2-Sistema-Estoque.git`) ou copie os arquivos para seu ambiente local.
@@ -136,7 +162,6 @@ CREATE TABLE `products` (
 ```
 :root/
 ├── .htaccess
-├── estrutura.txt
 ├── index.php
 ├── .gitignore
 ├── README.md
@@ -144,6 +169,7 @@ CREATE TABLE `products` (
 │
 ├── documentation/
 │   ├── DUMP.sql
+│   ├── estrutura_de_pastas.txt
 │   ├── README.pdf
 │   └── Teste_Tecnico_Estagio_Desenvolvimento_Web_A2[1].pdf
 │
