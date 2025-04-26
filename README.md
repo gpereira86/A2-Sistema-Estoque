@@ -8,12 +8,13 @@ Deploy: https://estoque.glaucopereira.com
 
 ---
 
-## Uso
+## Uso em produção
+
 O uso é intuitivo, seguem as orientações:
 
 * **Tela de login:** 
   - Acessar com e-mail e senha (fornecidos nesta documentação) para acesso ao sistema
-  - 
+    
 ![img.png](documentation/img_telas/img.png)
 
 
@@ -21,7 +22,7 @@ O uso é intuitivo, seguem as orientações:
   - Listagem geral de produtos cadastrados
   - Possibilidade de filtragem da tabela
   - Possibilidade de edição e exclusão de cada item (campo ação: 📝 edita e 🗑️ exclui)
-  - 
+    
 ![img_1.png](documentation/img_telas/img_1.png)
 
 
@@ -29,7 +30,7 @@ O uso é intuitivo, seguem as orientações:
   - Form para cadastro e edição de produtos com dica em texto dentro do input e com validação de dados em tempo real
   - Listagem de itens cadastrados pelo usuário logado
   - Possibilidade de edição e exclusão de cada item (campo ação: 📝 edita e 🗑️ exclui)
-  - 
+    
 ![img_2.png](documentation/img_telas/img_2.png)
 
 >**Nota:** No canto superior direito (em todo site) é exibido o texto `logout`, clicando nele o sistema desloga o usuário e redireciona para tela de login.
